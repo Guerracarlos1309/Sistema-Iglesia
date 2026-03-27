@@ -9,25 +9,28 @@ import { Locations } from "./pages/Locations/Locations";
 import { Reports } from "./pages/Reports/Reports";
 import { Login } from "./pages/Login/Login";
 import { Settings } from "./pages/Settings/Settings";
+import { ToastProvider } from "./components/ui/Toast";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/integrantes" element={<Members />} />
-          <Route path="/grupos" element={<Groups />} />
-          <Route path="/reuniones" element={<Meetings />} />
-          <Route path="/sedes" element={<Locations />} />
-          <Route path="/finanzas" element={<Finances />} />
-          <Route path="/reportes" element={<Reports />} />
-          <Route path="/configuracion" element={<Settings />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/integrantes" element={<Members />} />
+            <Route path="/grupos" element={<Groups />} />
+            <Route path="/reuniones" element={<Meetings />} />
+            <Route path="/sedes" element={<Locations />} />
+            <Route path="/finanzas" element={<Finances />} />
+            <Route path="/reportes" element={<Reports />} />
+            <Route path="/configuracion" element={<Settings />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }
 

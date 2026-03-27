@@ -5,6 +5,7 @@ import { Input } from '../../components/ui/Input';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
 import { ConfirmModal } from '../../components/ui/ConfirmModal';
+import { useToast } from '../../components/ui/Toast';
 import styles from './Meetings.module.css';
 
 const initialMeetings = [
@@ -13,6 +14,7 @@ const initialMeetings = [
 ];
 
 export function Meetings() {
+  const { addToast } = useToast();
   const [meetings, setMeetings] = useState(initialMeetings);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
@@ -20,6 +22,13 @@ export function Meetings() {
   const [formData, setFormData] = useState({
     date: '', name: '', group: '', attendance: '', status: 'Agendado'
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredMeetings = meetings.filter(meeting => 
+    meeting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    meeting.group.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleOpenModal = () => {
     setFormData({ date: '', name: '', group: 'Congregación General', attendance: '', status: 'Agendado' });
@@ -36,6 +45,7 @@ export function Meetings() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setMeetings([{ ...formData, id: Date.now() }, ...meetings]);
+    addToast('Reunión registrada con éxito');
     handleCloseModal();
   };
 
@@ -47,6 +57,7 @@ export function Meetings() {
     if (confirmConfig.id !== null) {
       setMeetings(meetings.filter(m => m.id !== confirmConfig.id));
       setConfirmConfig({ isOpen: false, id: null });
+      addToast('Reunión eliminada', 'info');
     }
   };
 
@@ -64,7 +75,12 @@ export function Meetings() {
       </header>
 
       <div style={{ maxWidth: '400px' }}>
-        <Input icon={Search} placeholder="Buscar por fecha, nombre o tipo..." />
+        <Input 
+          icon={Search} 
+          placeholder="Buscar por fecha, nombre o tipo..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <TableContainer>
@@ -79,7 +95,7 @@ export function Meetings() {
           </tr>
         </TableHead>
         <TableBody>
-          {meetings.map(m => (
+          {filteredMeetings.map(m => (
             <TableRow key={m.id}>
               <TableCell>{m.date}</TableCell>
               <TableCell>{m.name}</TableCell>
@@ -103,6 +119,13 @@ export function Meetings() {
               </TableCell>
             </TableRow>
           ))}
+          {filteredMeetings.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                No se encontraron reuniones que coincidan con la búsqueda.
+              </TableCell>
+            </TableRow>
+          )}
           {meetings.length === 0 && (
              <TableRow>
              <TableCell colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>

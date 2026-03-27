@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/Input";
 import { Card, CardContent } from "../../components/ui/Card";
 import { Modal } from "../../components/ui/Modal";
 import { ConfirmModal } from "../../components/ui/ConfirmModal";
+import { useToast } from "../../components/ui/Toast";
 import styles from "./Groups.module.css";
 
 const initialGroups = [
@@ -35,6 +36,7 @@ const initialGroups = [
 ];
 
 export function Groups() {
+  const { addToast } = useToast();
   const [groups, setGroups] = useState(initialGroups);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -43,6 +45,14 @@ export function Groups() {
   const [formData, setFormData] = useState({
     name: "", leader: "", location: "", members: 0, type: "General"
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredGroups = groups.filter(group => 
+    group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    group.leader.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    group.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleOpenModal = (group = null) => {
     if (group) {
@@ -69,8 +79,10 @@ export function Groups() {
     e.preventDefault();
     if (editingId) {
       setGroups(groups.map(g => g.id === editingId ? { ...formData, id: editingId } : g));
+      addToast('Grupo actualizado con éxito');
     } else {
       setGroups([...groups, { ...formData, id: Date.now() }]);
+      addToast('Grupo creado correctamente');
     }
     handleCloseModal();
   };
@@ -84,6 +96,7 @@ export function Groups() {
     if (confirmConfig.id !== null) {
       setGroups(groups.filter(g => g.id !== confirmConfig.id));
       setConfirmConfig({ isOpen: false, id: null });
+      addToast('Grupo eliminado', 'info');
     }
   };
 
@@ -103,11 +116,16 @@ export function Groups() {
       </header>
 
       <div style={{ maxWidth: "400px" }}>
-        <Input icon={Search} placeholder="Buscar grupo o líder..." />
+        <Input 
+          icon={Search} 
+          placeholder="Buscar grupo o líder..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <div className={styles.groupsGrid}>
-        {groups.map((group) => (
+        {filteredGroups.map((group) => (
           <Card key={group.id} className={styles.groupCard} onClick={() => handleOpenModal(group)}>
             <CardContent>
               <div className={styles.cardHeader}>
@@ -168,8 +186,8 @@ export function Groups() {
             </CardContent>
           </Card>
         ))}
-        {groups.length === 0 && (
-          <p style={{ color: 'var(--text-muted)' }}>No hay grupos registrados.</p>
+        {filteredGroups.length === 0 && (
+          <p style={{ color: 'var(--text-muted)', padding: '2rem' }}>No se encontraron grupos que coincidan con la búsqueda.</p>
         )}
       </div>
 

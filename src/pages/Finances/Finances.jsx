@@ -5,6 +5,7 @@ import { Input } from '../../components/ui/Input';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
 import { ConfirmModal } from '../../components/ui/ConfirmModal';
+import { useToast } from '../../components/ui/Toast';
 import styles from './Finances.module.css';
 
 const initialTransactions = [
@@ -15,6 +16,7 @@ const initialTransactions = [
 ];
 
 export function Finances() {
+  const { addToast } = useToast();
   const [transactions, setTransactions] = useState(initialTransactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
@@ -22,6 +24,13 @@ export function Finances() {
   const [formData, setFormData] = useState({
     date: '', type: 'Ingreso', category: 'Diezmo', amount: '', status: 'Completado'
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredTransactions = transactions.filter(trx => 
+    trx.trxId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trx.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleOpenModal = () => {
     setFormData({ date: '', type: 'Ingreso', category: 'Diezmo', amount: '', status: 'Completado' });
@@ -44,6 +53,7 @@ export function Finances() {
       amount: `$${Number(formData.amount).toFixed(2)}`
     };
     setTransactions([newTrx, ...transactions]);
+    addToast('Transacción registrada con éxito');
     handleCloseModal();
   };
 
@@ -55,6 +65,7 @@ export function Finances() {
     if (confirmConfig.id !== null) {
       setTransactions(transactions.filter(t => t.id !== confirmConfig.id));
       setConfirmConfig({ isOpen: false, id: null });
+      addToast('Transacción eliminada', 'info');
     }
   };
 
@@ -78,7 +89,12 @@ export function Finances() {
       </header>
 
       <div style={{ maxWidth: '400px' }}>
-        <Input icon={Search} placeholder="Buscar por ID o categoría..." />
+        <Input 
+          icon={Search} 
+          placeholder="Buscar por ID o categoría..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <TableContainer>
@@ -93,7 +109,7 @@ export function Finances() {
           </tr>
         </TableHead>
         <TableBody>
-          {transactions.map((trx) => (
+          {filteredTransactions.map((trx) => (
             <TableRow key={trx.id}>
               <TableCell><span style={{ color: 'var(--text-secondary)' }}>{trx.trxId}</span></TableCell>
               <TableCell>{trx.date}</TableCell>
@@ -123,6 +139,13 @@ export function Finances() {
               </TableCell>
             </TableRow>
           ))}
+          {filteredTransactions.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                No se encontraron transacciones que coincidan con la búsqueda.
+              </TableCell>
+            </TableRow>
+          )}
           {transactions.length === 0 && (
              <TableRow>
              <TableCell colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>

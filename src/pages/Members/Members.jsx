@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
 import { ConfirmModal } from '../../components/ui/ConfirmModal';
+import { useToast } from '../../components/ui/Toast';
 import styles from './Members.module.css';
 
 const initialMembers = [
@@ -14,6 +15,7 @@ const initialMembers = [
 ];
 
 export function Members() {
+  const { addToast } = useToast();
   const [members, setMembers] = useState(initialMembers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -22,6 +24,14 @@ export function Members() {
   const [formData, setFormData] = useState({
     name: '', email: '', phone: '', group: '', role: 'Miembro', status: 'Activo'
   });
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredMembers = members.filter(member => 
+    member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.phone.includes(searchTerm)
+  );
 
   const handleOpenModal = (member = null) => {
     if (member) {
@@ -48,8 +58,10 @@ export function Members() {
     e.preventDefault();
     if (editingId) {
       setMembers(members.map(m => m.id === editingId ? { ...formData, id: editingId } : m));
+      addToast('Integrante actualizado correctamente');
     } else {
       setMembers([...members, { ...formData, id: Date.now() }]);
+      addToast('Integrante registrado correctamente');
     }
     handleCloseModal();
   };
@@ -62,6 +74,7 @@ export function Members() {
     if (confirmConfig.id !== null) {
       setMembers(members.filter(m => m.id !== confirmConfig.id));
       setConfirmConfig({ isOpen: false, id: null });
+      addToast('Integrante eliminado con éxito', 'info');
     }
   };
 
@@ -80,7 +93,12 @@ export function Members() {
 
       <div className={styles.searchFilters}>
         <div style={{ flex: 1 }}>
-          <Input icon={Search} placeholder="Buscar por nombre, correo o teléfono..." />
+          <Input 
+            icon={Search} 
+            placeholder="Buscar por nombre, correo o teléfono..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         <Button variant="secondary">
           <Filter size={18} />
@@ -100,7 +118,7 @@ export function Members() {
           </tr>
         </TableHead>
         <TableBody>
-          {members.map((member) => (
+          {filteredMembers.map((member) => (
             <TableRow key={member.id}>
               <TableCell>
                 <div style={{ fontWeight: 500 }}>{member.name}</div>
@@ -130,10 +148,10 @@ export function Members() {
               </TableCell>
             </TableRow>
           ))}
-          {members.length === 0 && (
+          {filteredMembers.length === 0 && (
             <TableRow>
               <TableCell colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
-                No hay integrantes registrados.
+                No se encontraron integrantes que coincidan con la búsqueda.
               </TableCell>
             </TableRow>
           )}

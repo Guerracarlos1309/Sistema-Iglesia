@@ -22,6 +22,14 @@ export function Locations() {
     name: '', address: '', pastor: '', status: 'Activa'
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredLocations = locations.filter(loc => 
+    loc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    loc.pastor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    loc.address.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleOpenModal = (loc = null) => {
     if (loc) {
       setEditingId(loc.id);
@@ -44,8 +52,10 @@ export function Locations() {
     e.preventDefault();
     if (editingId) {
       setLocations(locations.map(l => l.id === editingId ? { ...formData, id: editingId } : l));
+      addToast('Sede actualizada correctamente');
     } else {
       setLocations([...locations, { ...formData, id: Date.now() }]);
+      addToast('Sede registrada correctamente');
     }
     handleCloseModal();
   };
@@ -59,6 +69,7 @@ export function Locations() {
     if (confirmConfig.id !== null) {
       setLocations(locations.filter(l => l.id !== confirmConfig.id));
       setConfirmConfig({ isOpen: false, id: null });
+      addToast('Sede eliminada con éxito', 'info');
     }
   };
 
@@ -76,11 +87,16 @@ export function Locations() {
       </header>
       
       <div style={{ maxWidth: '400px' }}>
-        <Input icon={Search} placeholder="Buscar sede..." />
+        <Input 
+          icon={Search} 
+          placeholder="Buscar sede..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
-        {locations.map(site => (
+        {filteredLocations.map(site => (
           <Card key={site.id} style={{ transition: 'transform 0.2s', cursor: 'pointer' }} className="hover:transform hover:-translate-y-1 hover:shadow-lg" onClick={() => handleOpenModal(site)}>
             <CardContent>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '1rem' }}>
@@ -109,8 +125,8 @@ export function Locations() {
             </CardContent>
           </Card>
         ))}
-        {locations.length === 0 && (
-          <p style={{ color: 'var(--text-muted)' }}>No hay sedes registradas.</p>
+        {filteredLocations.length === 0 && (
+          <p style={{ color: 'var(--text-muted)', padding: '2rem' }}>No se encontraron sedes que coincidan con la búsqueda.</p>
         )}
       </div>
 
