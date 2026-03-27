@@ -81,8 +81,9 @@
 }
 
 .navLink.active {
-  background-color: var(--accent-glow);
+  background-color: #EFF6FF;
   color: var(--accent-primary);
+  border-left: 3px solid var(--accent-primary);
 }
 
 .navIcon {

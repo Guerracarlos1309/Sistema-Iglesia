@@ -24,7 +24,7 @@ export function Settings() {
 
   const sections = [
     { id: "general", label: "Información General", icon: Building2 },
-    { id: "appearance", label: "Apariencia", icon: Palette },
+
     { id: "security", label: "Seguridad", icon: Lock },
     { id: "notifications", label: "Notificaciones", icon: Bell },
     { id: "system", label: "Sistema y Red", icon: Globe },
@@ -106,84 +106,6 @@ export function Settings() {
                       label="Dirección Principal"
                       defaultValue="Calle de la Fe #123, Ciudad"
                     />
-                  </div>
-                </div>
-              )}
-
-              {activeSection === "appearance" && (
-                <div className={styles.formSection}>
-                  <p className={styles.sectionDesc}>
-                    Personaliza cómo se ve el sistema para todos los
-                    administradores.
-                  </p>
-                  <div className={styles.themeGrid}>
-                    <div
-                      className={`${styles.themeOption} ${styles.activeTheme}`}
-                    >
-                      <div
-                        className={styles.themePreview}
-                        style={{ background: "#0f172a" }}
-                      ></div>
-                      <span>Modo Oscuro (Default)</span>
-                    </div>
-                    <div className={styles.themeOption}>
-                      <div
-                        className={styles.themePreview}
-                        style={{
-                          background: "#f8fafc",
-                          border: "1px solid var(--border-color)",
-                        }}
-                      ></div>
-                      <span>Modo Claro</span>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: "2rem" }}>
-                    <h3 className={styles.subTitle}>Color de Acento</h3>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "1rem",
-                        marginTop: "1rem",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#3b82f6",
-                          cursor: "pointer",
-                          border: "2px solid #fff",
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#8b5cf6",
-                          cursor: "pointer",
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#10b981",
-                          cursor: "pointer",
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          borderRadius: "50%",
-                          background: "#f59e0b",
-                          cursor: "pointer",
-                        }}
-                      ></div>
-                    </div>
                   </div>
                 </div>
               )}

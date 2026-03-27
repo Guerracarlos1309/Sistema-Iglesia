@@ -16,8 +16,8 @@
   height: 50vw;
   background: radial-gradient(
     circle,
-    rgba(59, 130, 246, 0.15) 0%,
-    rgba(0, 0, 0, 0) 70%
+    var(--accent-glow) 0%,
+    transparent 70%
   );
   border-radius: 50%;
   z-index: 0;
@@ -32,8 +32,8 @@
   height: 60vw;
   background: radial-gradient(
     circle,
-    rgba(139, 92, 246, 0.1) 0%,
-    rgba(0, 0, 0, 0) 70%
+    rgba(180, 83, 9, 0.03) 0%,
+    transparent 70%
   );
   border-radius: 50%;
   z-index: 0;
@@ -110,15 +110,15 @@
 .loginCard {
   width: 100%;
   max-width: 420px;
-  background: rgba(15, 23, 42, 0.6); /* Glassmorphism base */
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   padding: var(--spacing-8);
   box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 25px 50px -12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .formHeader {

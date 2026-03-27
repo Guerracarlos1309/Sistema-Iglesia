@@ -10,12 +10,14 @@ import { Reports } from "./pages/Reports/Reports";
 import { Login } from "./pages/Login/Login";
 import { Settings } from "./pages/Settings/Settings";
 import { ToastProvider } from "./components/ui/Toast";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
-    <ToastProvider>
-      <BrowserRouter>
-        <Routes>
+    <ThemeProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
@@ -31,6 +33,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ToastProvider>
+    </ThemeProvider>
   );
 }
 

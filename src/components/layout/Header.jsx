@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, User, LogOut, Settings, Menu } from 'lucide-react';
+import { Bell, User, LogOut, Settings, Menu, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLayout } from './AppLayout';
+import { useTheme } from '../../context/ThemeContext';
 import styles from './Header.module.css';
 
 export function Header() {
   const { toggleSidebar } = useLayout();
+  const { theme, toggleTheme } = useTheme();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -53,6 +55,16 @@ export function Header() {
         {/* Espacio para breadcrumbs si se requiere */}
       </div>
       <div className={styles.rightSection}>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={toggleTheme}
+          style={{ borderRadius: 'var(--radius-full)' }}
+          title={theme === 'light' ? 'Activar modo oscuro' : 'Activar modo claro'}
+        >
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </Button>
+
         <div className={styles.notifContainer} ref={notifRef}>
           <Button 
             variant="ghost" 

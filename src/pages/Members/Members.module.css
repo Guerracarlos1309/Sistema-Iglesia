@@ -32,13 +32,13 @@
 .statusActive {
   background-color: var(--success-bg);
   color: var(--success);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success);
 }
 
 .statusInactive {
   background-color: var(--danger-bg);
   color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  border: 1px solid var(--danger);
 }
 
 .roleBadge {

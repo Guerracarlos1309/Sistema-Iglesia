@@ -20,7 +20,7 @@
   text-transform: uppercase;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-secondary);
   letter-spacing: 0.05em;
 }
 

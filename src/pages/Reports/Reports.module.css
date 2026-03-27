@@ -72,7 +72,7 @@
 .metricCard:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg), 0 0 15px var(--accent-glow);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: var(--accent-primary);
 }
 
 .metricHeader {

@@ -45,8 +45,8 @@
 }
 
 .activeNavItem {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--bg-primary);
+  border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
 
@@ -156,7 +156,7 @@
 
 .activeTheme {
   border-color: var(--accent-primary);
-  background: rgba(59, 130, 246, 0.05);
+  background: var(--bg-primary);
 }
 
 .themePreview {
