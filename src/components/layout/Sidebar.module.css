@@ -4,8 +4,8 @@
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  transition: var(--transition);
-  z-index: 40;
+  transition: transform 0.3s ease;
+  z-index: 50;
 }
 
 .logoContainer {
@@ -15,6 +15,37 @@
   padding: 0 var(--spacing-6);
   border-bottom: 1px solid var(--border-color);
   gap: var(--spacing-3);
+  position: relative;
+}
+
+.closeButton {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: absolute;
+  right: var(--spacing-4);
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .closeButton {
+    display: flex;
+  }
 }
 
 .logoText {

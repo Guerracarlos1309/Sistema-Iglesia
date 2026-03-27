@@ -4,6 +4,7 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
 import styles from './Members.module.css';
 
 const initialMembers = [
@@ -16,6 +17,7 @@ export function Members() {
   const [members, setMembers] = useState(initialMembers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
   
   const [formData, setFormData] = useState({
     name: '', email: '', phone: '', group: '', role: 'Miembro', status: 'Activo'
@@ -53,8 +55,13 @@ export function Members() {
   };
 
   const handleDelete = (id) => {
-    if (confirm('¿Estás seguro de eliminar este integrante?')) {
-      setMembers(members.filter(m => m.id !== id));
+    setConfirmConfig({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmConfig.id !== null) {
+      setMembers(members.filter(m => m.id !== confirmConfig.id));
+      setConfirmConfig({ isOpen: false, id: null });
     }
   };
 
@@ -132,6 +139,14 @@ export function Members() {
           )}
         </TableBody>
       </TableContainer>
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Integrante"
+        message="¿Estás seguro de que deseas eliminar este integrante? Esta acción no se puede deshacer."
+      />
 
       <Modal
         isOpen={isModalOpen}

@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
 import styles from './Finances.module.css';
 
 const initialTransactions = [
@@ -16,6 +17,7 @@ const initialTransactions = [
 export function Finances() {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
   
   const [formData, setFormData] = useState({
     date: '', type: 'Ingreso', category: 'Diezmo', amount: '', status: 'Completado'
@@ -46,8 +48,13 @@ export function Finances() {
   };
 
   const handleDelete = (id) => {
-    if (confirm("¿Eliminar transacción?")) {
-      setTransactions(transactions.filter(t => t.id !== id));
+    setConfirmConfig({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmConfig.id !== null) {
+      setTransactions(transactions.filter(t => t.id !== confirmConfig.id));
+      setConfirmConfig({ isOpen: false, id: null });
     }
   };
 
@@ -125,6 +132,14 @@ export function Finances() {
           )}
         </TableBody>
       </TableContainer>
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Transacción"
+        message="¿Estás seguro de que deseas eliminar permanentemente este registro financiero?"
+      />
 
       <Modal
         isOpen={isModalOpen}

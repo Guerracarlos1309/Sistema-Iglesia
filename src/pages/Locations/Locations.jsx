@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Modal } from '../../components/ui/Modal';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
 import styles from './Locations.module.css';
 
 const initialLocations = [
@@ -15,6 +16,7 @@ export function Locations() {
   const [locations, setLocations] = useState(initialLocations);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
 
   const [formData, setFormData] = useState({
     name: '', address: '', pastor: '', status: 'Activa'
@@ -50,8 +52,13 @@ export function Locations() {
 
   const handleDelete = (id, e) => {
     e.stopPropagation();
-    if (confirm("¿Eliminar esta sede?")) {
-      setLocations(locations.filter(l => l.id !== id));
+    setConfirmConfig({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmConfig.id !== null) {
+      setLocations(locations.filter(l => l.id !== confirmConfig.id));
+      setConfirmConfig({ isOpen: false, id: null });
     }
   };
 
@@ -106,6 +113,14 @@ export function Locations() {
           <p style={{ color: 'var(--text-muted)' }}>No hay sedes registradas.</p>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Sede"
+        message="¿Estás seguro de que deseas eliminar esta sede del sistema?"
+      />
 
       <Modal
         isOpen={isModalOpen}

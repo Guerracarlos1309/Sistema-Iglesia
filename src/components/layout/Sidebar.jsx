@@ -7,10 +7,12 @@ import {
   Calendar,
   MapPin,
   Activity,
-  Settings,
   Church,
+  ChartNetwork,
+  X,
 } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { useLayout } from "./AppLayout";
 import styles from "./Sidebar.module.css";
 
 const navItems = [
@@ -20,15 +22,20 @@ const navItems = [
   { icon: Calendar, label: "Reuniones", path: "/reuniones" },
   { icon: MapPin, label: "Sedes", path: "/sedes" },
   { icon: Activity, label: "Finanzas", path: "/finanzas" },
-  { icon: Settings, label: "Configuración", path: "/configuracion" },
+  { icon: ChartNetwork, label: "Reportes", path: "/reportes" },
 ];
 
 export function Sidebar() {
+  const { isSidebarOpen, closeSidebar } = useLayout();
+
   return (
-    <aside className={styles.sidebar}>
+    <aside className={cn(styles.sidebar, isSidebarOpen && styles.open)}>
       <div className={styles.logoContainer}>
         <Church size={28} color="var(--accent-primary)" />
         <span className={styles.logoText}>Church System</span>
+        <button className={styles.closeButton} onClick={closeSidebar}>
+          <X size={20} />
+        </button>
       </div>
       <nav className={styles.nav}>
         {navItems.map((item) => (

@@ -4,6 +4,7 @@ import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Card, CardContent } from "../../components/ui/Card";
 import { Modal } from "../../components/ui/Modal";
+import { ConfirmModal } from "../../components/ui/ConfirmModal";
 import styles from "./Groups.module.css";
 
 const initialGroups = [
@@ -37,6 +38,7 @@ export function Groups() {
   const [groups, setGroups] = useState(initialGroups);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
 
   const [formData, setFormData] = useState({
     name: "", leader: "", location: "", members: 0, type: "General"
@@ -75,8 +77,13 @@ export function Groups() {
 
   const handleDelete = (id, e) => {
     e.stopPropagation();
-    if (confirm("¿Estás seguro de eliminar este grupo?")) {
-      setGroups(groups.filter(g => g.id !== id));
+    setConfirmConfig({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmConfig.id !== null) {
+      setGroups(groups.filter(g => g.id !== confirmConfig.id));
+      setConfirmConfig({ isOpen: false, id: null });
     }
   };
 
@@ -165,6 +172,14 @@ export function Groups() {
           <p style={{ color: 'var(--text-muted)' }}>No hay grupos registrados.</p>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Grupo"
+        message="¿Estás seguro de que deseas eliminar este grupo? Se perderán todos los datos asociados."
+      />
 
       <Modal
         isOpen={isModalOpen}

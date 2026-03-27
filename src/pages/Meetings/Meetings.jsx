@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { TableContainer, TableHead, TableBody, TableRow, TableHeader, TableCell } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
 import styles from './Meetings.module.css';
 
 const initialMeetings = [
@@ -14,6 +15,7 @@ const initialMeetings = [
 export function Meetings() {
   const [meetings, setMeetings] = useState(initialMeetings);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, id: null });
   
   const [formData, setFormData] = useState({
     date: '', name: '', group: '', attendance: '', status: 'Agendado'
@@ -38,8 +40,13 @@ export function Meetings() {
   };
 
   const handleDelete = (id) => {
-    if (confirm("¿Eliminar este registro de reunión?")) {
-      setMeetings(meetings.filter(m => m.id !== id));
+    setConfirmConfig({ isOpen: true, id });
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmConfig.id !== null) {
+      setMeetings(meetings.filter(m => m.id !== confirmConfig.id));
+      setConfirmConfig({ isOpen: false, id: null });
     }
   };
 
@@ -105,6 +112,14 @@ export function Meetings() {
           )}
         </TableBody>
       </TableContainer>
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ isOpen: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Reunión"
+        message="¿Estás seguro de que deseas eliminar este registro de reunión?"
+      />
 
       <Modal
         isOpen={isModalOpen}
