@@ -11,11 +11,13 @@ import { Login } from "./pages/Login/Login";
 import { Settings } from "./pages/Settings/Settings";
 import { ToastProvider } from "./components/ui/Toast";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <ThemeProvider>
-      <ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
         <BrowserRouter>
           <Routes>
           <Route path="/login" element={<Login />} />
@@ -32,7 +34,8 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
-    </ToastProvider>
+        </ToastProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

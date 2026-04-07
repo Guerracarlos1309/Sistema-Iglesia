@@ -1,30 +1,63 @@
-import React, { useState } from "react";
-import {
-  Download,
-  Filter,
-  TrendingUp,
-  Users,
-  DollarSign,
-  Calendar,
-  ArrowUpRight,
-  ArrowDownRight,
+import React from 'react';
+import { 
+  Download, 
+  Filter, 
+  TrendingUp, 
+  Users, 
+  DollarSign, 
+  Calendar, 
+  ArrowUpRight, 
+  ArrowDownRight 
 } from "lucide-react";
 import { Button } from "../../components/ui/Button";
-import {
-  TableContainer,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableHeader,
-  TableCell,
+import { 
+  TableContainer, 
+  TableHead, 
+  TableBody, 
+  TableRow, 
+  TableHeader, 
+  TableCell 
 } from "../../components/ui/Table";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle 
 } from "../../components/ui/Card";
+import { 
+  LineChart, 
+  Line, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  Cell, 
+  PieChart, 
+  Pie, 
+  Legend 
+} from 'recharts';
+import { useLocation } from "react-router-dom";
+import { useToast } from "../../components/ui/Toast";
 import styles from "./Reports.module.css";
+
+const growthData = [
+  { week: 'Sem 1', retencion: 45, nuevos: 60 },
+  { week: 'Sem 2', retencion: 52, nuevos: 55 },
+  { week: 'Sem 3', retencion: 48, nuevos: 70 },
+  { week: 'Sem 4', retencion: 61, nuevos: 65 },
+];
+
+const monthlyConsolidated = [
+  { name: 'Membresía', valor: 85, fill: 'var(--accent-primary)' },
+  { name: 'Asistencia', valor: 92, fill: 'var(--success)' },
+  { name: 'Finanzas', valor: 78, fill: 'var(--warning)' },
+  { name: 'Grupos', valor: 88, fill: 'var(--accent-secondary)' },
+];
 
 const summaryData = [
   {
@@ -93,7 +126,17 @@ const recentReports = [
 ];
 
 export function Reports() {
-  const [activeTab, setActiveTab] = useState("General");
+  const { addToast } = useToast();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const viewMode = searchParams.get('view');
+
+  const handleDownload = (name = "Reporte") => {
+    addToast(`Generando ${name}...`, 'info');
+    setTimeout(() => {
+      addToast(`${name} descargado correctamente`, 'success');
+    }, 1500);
+  };
 
   return (
     <div className={styles.page}>
@@ -109,7 +152,7 @@ export function Reports() {
             <Filter size={18} />
             Filtros
           </Button>
-          <Button variant="primary">
+          <Button variant="primary" onClick={() => handleDownload("Consolidado General")}>
             <Download size={18} />
             Exportar Todos
           </Button>
@@ -144,97 +187,126 @@ export function Reports() {
       </div>
 
       <div className={styles.chartsSection}>
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>Asistencia Semanal</CardTitle>
-          </CardHeader>
-          <CardContent
-            style={{
-              minHeight: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              className={styles.barChartContainer}
-              style={{ width: "100%", height: "200px" }}
-            >
-              <div className={styles.barWrapper}>
-                <div className={styles.bar} style={{ height: "60%" }}></div>
-                <span>Sem 1</span>
-              </div>
-              <div className={styles.barWrapper}>
-                <div className={styles.bar} style={{ height: "75%" }}></div>
-                <span>Sem 2</span>
-              </div>
-              <div className={styles.barWrapper}>
-                <div className={styles.bar} style={{ height: "45%" }}></div>
-                <span>Sem 3</span>
-              </div>
-              <div className={styles.barWrapper}>
-                <div className={styles.bar} style={{ height: "90%" }}></div>
-                <span>Sem 4</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {viewMode === 'crecimiento' ? (
+          <Card className="glass-panel" style={{ gridColumn: 'span 2' }}>
+            <CardHeader>
+              <CardTitle>Análisis de Retención y Crecimiento Semanal</CardTitle>
+            </CardHeader>
+            <CardContent style={{ height: '400px', padding: '1rem' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={growthData}>
+                  <defs>
+                    <linearGradient id="colorNuevos" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--accent-primary)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="var(--accent-primary)" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorRetencion" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--success)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="var(--success)" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                  <XAxis dataKey="week" stroke="var(--text-muted)" fontSize={12} />
+                  <YAxis stroke="var(--text-muted)" fontSize={12} />
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', borderRadius: '8px' }} />
+                  <Legend />
+                  <Area type="monotone" dataKey="nuevos" stroke="var(--accent-primary)" fillOpacity={1} fill="url(#colorNuevos)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="retencion" stroke="var(--success)" fillOpacity={1} fill="url(#colorRetencion)" strokeWidth={3} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        ) : viewMode === 'mensual' ? (
+          <>
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle>Consolidado Mensual de KPI's</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: '350px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={monthlyConsolidated} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={false} />
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" stroke="var(--text-primary)" fontSize={12} width={100} />
+                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }} />
+                    <Bar dataKey="valor" radius={[0, 4, 4, 0]}>
+                      {monthlyConsolidated.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle>Estado de Cumplimiento de Metas</CardTitle>
+              </CardHeader>
+              <CardContent style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '350px' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--success)' }}>92%</h2>
+                  <p style={{ color: 'var(--text-secondary)' }}>Objetivos alcanzados este mes</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {['Membresía', 'Liderazgo', 'Finanzas'].map(goal => (
+                    <div key={goal} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                      <span style={{ fontSize: '0.875rem' }}>{goal}</span>
+                      <span style={{ color: 'var(--success)', fontWeight: 600 }}>Completado</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <>
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle>Asistencia Semanal</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: "300px", paddingTop: "1rem" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={growthData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                    <XAxis dataKey="week" stroke="var(--text-muted)" fontSize={12} />
+                    <YAxis stroke="var(--text-muted)" fontSize={12} />
+                    <Tooltip contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }} />
+                    <Bar dataKey="nuevos" fill="var(--accent-primary)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
-        <Card className="glass-panel">
-          <CardHeader>
-            <CardTitle>Desglose de Ingresos</CardTitle>
-          </CardHeader>
-          <CardContent
-            style={{
-              minHeight: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div className={styles.progressContainer}>
-              <div className={styles.progressItem}>
-                <div className={styles.progressLabel}>
-                  <span>Diezmos</span>
-                  <span>70%</span>
-                </div>
-                <div className={styles.progressBarBg}>
-                  <div
-                    className={styles.progressBarFill}
-                    style={{
-                      width: "70%",
-                      background: "var(--accent-primary)",
-                    }}
-                  ></div>
-                </div>
-              </div>
-              <div className={styles.progressItem}>
-                <div className={styles.progressLabel}>
-                  <span>Ofrendas</span>
-                  <span>20%</span>
-                </div>
-                <div className={styles.progressBarBg}>
-                  <div
-                    className={styles.progressBarFill}
-                    style={{ width: "20%", background: "var(--success)" }}
-                  ></div>
-                </div>
-              </div>
-              <div className={styles.progressItem}>
-                <div className={styles.progressLabel}>
-                  <span>Donaciones Especiales</span>
-                  <span>10%</span>
-                </div>
-                <div className={styles.progressBarBg}>
-                  <div
-                    className={styles.progressBarFill}
-                    style={{ width: "10%", background: "var(--warning)" }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle>Desglose de Ingresos</CardTitle>
+              </CardHeader>
+              <CardContent style={{ height: "300px", paddingTop: "1rem" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: 'Diezmos', value: 70 },
+                        { name: 'Ofrendas', value: 20 },
+                        { name: 'Donaciones', value: 10 },
+                      ]}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      <Cell fill="var(--accent-primary)" />
+                      <Cell fill="var(--success)" />
+                      <Cell fill="var(--warning)" />
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       <div className={styles.tableSection}>
@@ -283,6 +355,7 @@ export function Reports() {
                     variant="ghost"
                     size="sm"
                     style={{ color: "var(--accent-primary)" }}
+                    onClick={() => handleDownload(report.name)}
                   >
                     Descargar PDF
                   </Button>

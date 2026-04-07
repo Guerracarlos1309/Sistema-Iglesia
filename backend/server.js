@@ -28,6 +28,9 @@ app.use('/api/meetings', createCrudRouter('meetings'));
 app.use('/api/attendance', createCrudRouter('attendance'));
 app.use('/api/periods', createCrudRouter('periods'));
 app.use('/api/finances', createCrudRouter('finances'));
+app.use('/api/notifications', createCrudRouter('notifications'));
+app.use('/api/group_reports', createCrudRouter('group_reports'));
+app.use('/api/member_status_history', createCrudRouter('member_status_history'));
 
 // We handle group_members separately if needed, or through direct queries
 

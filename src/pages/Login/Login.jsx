@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Church, Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
+import { useAuth } from "../../context/AuthContext";
 import styles from "./Login.module.css";
 
 export function Login() {
@@ -10,12 +11,20 @@ export function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
 
+  const { login } = useAuth();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
     // Simulate login delay
     setTimeout(() => {
       setIsLoading(false);
+      const isSimulatedAdmin = formData.email.includes("admin");
+      login("dummy-token", { 
+        name: isSimulatedAdmin ? "Administrador" : "Usuario Célula", 
+        role: isSimulatedAdmin ? "admin" : "user",
+        email: formData.email 
+      });
       navigate("/");
     }, 1000);
   };

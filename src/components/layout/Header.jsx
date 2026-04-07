@@ -4,6 +4,7 @@ import { Bell, User, LogOut, Settings, Menu, Sun, Moon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useLayout } from './AppLayout';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 export function Header() {
@@ -14,6 +15,7 @@ export function Header() {
   const dropdownRef = useRef(null);
   const notifRef = useRef(null);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [notifications, setNotifications] = useState([
     { id: 1, title: 'Nuevo Integrante', message: 'María Rodríguez se ha unido a la congregación.', time: 'Hace 5 min', read: false },
@@ -42,7 +44,7 @@ export function Header() {
   };
 
   const handleLogout = () => {
-    // UI redirect for now
+    logout();
     navigate('/login');
   };
 
@@ -109,8 +111,8 @@ export function Header() {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className={styles.userInfo}>
-              <span className={styles.userName}>Carlos Guerra</span>
-              <span className={styles.userRole}>Administrador</span>
+              <span className={styles.userName}>{user?.name || 'Usuario'}</span>
+              <span className={styles.userRole}>{user?.role === 'admin' ? 'Administrador' : 'Usuario'}</span>
             </div>
             <div className={styles.avatar}>
               <User size={20} />
@@ -120,8 +122,8 @@ export function Header() {
           {isDropdownOpen && (
             <div className={styles.dropdownMenu}>
               <div className={styles.dropdownHeader}>
-                <span className={styles.dropdownName}>Carlos Guerra</span>
-                <span className={styles.dropdownEmail}>carlos.guerra@iglesia.com</span>
+                <span className={styles.dropdownName}>{user?.name || 'Usuario'}</span>
+                <span className={styles.dropdownEmail}>{user?.email || 'usuario@iglesia.com'}</span>
               </div>
               <div className={styles.dropdownDivider}></div>
               <button className={styles.dropdownItem} onClick={() => { navigate('/configuracion'); setIsDropdownOpen(false); }} style={{ color: 'var(--text-primary)' }}>

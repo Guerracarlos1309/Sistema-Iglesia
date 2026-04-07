@@ -11,9 +11,13 @@ const createCrudRouter = (tableName) => {
 
   router.get('/', controller.getAll);
   router.get('/:id', controller.getById);
-  router.post('/', controller.create);
-  router.put('/:id', controller.update);
-  router.delete('/:id', controller.remove);
+  
+  // Protect modifications to admin role
+  const { restrictTo } = require('../middlewares/authMiddleware');
+  
+  router.post('/', restrictTo('admin'), controller.create);
+  router.put('/:id', restrictTo('admin'), controller.update);
+  router.delete('/:id', restrictTo('admin'), controller.remove);
 
   return router;
 };

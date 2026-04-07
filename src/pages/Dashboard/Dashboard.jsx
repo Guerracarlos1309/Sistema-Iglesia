@@ -13,7 +13,34 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
+
+const attendanceData = [
+  { week: 'Semana 1', asistencia: 120 },
+  { week: 'Semana 2', asistencia: 132 },
+  { week: 'Semana 3', asistencia: 145 },
+  { week: 'Semana 4', asistencia: 138 },
+  { week: 'Semana 5', asistencia: 155 },
+  { week: 'Semana 6', asistencia: 168 },
+  { week: 'Semana 7', asistencia: 172 },
+  { week: 'Semana 8', asistencia: 185 },
+];
+
+const groupData = [
+  { name: 'C. Norte', asistencia: 45 },
+  { name: 'C. Sur', asistencia: 38 },
+  { name: 'C. Este', asistencia: 55 },
+  { name: 'M. Alabanza', asistencia: 25 },
+];
+
+const upcomingEvents = [
+  { id: 1, title: 'Servicio Dominical', date: 'Dom, 12 Oct', time: '09:00 AM' },
+  { id: 2, title: 'Reunión de Líderes', date: 'Mar, 14 Oct', time: '07:30 PM' },
+  { id: 3, title: 'Retiro Jóvenes', date: 'Sáb, 18 Oct', time: '08:00 AM' },
+];
 
 const metrics = [
   {
@@ -47,6 +74,7 @@ const metrics = [
 ];
 
 export function Dashboard() {
+  const navigate = useNavigate();
   return (
     <div className={styles.dashboard}>
       <header>
@@ -85,42 +113,87 @@ export function Dashboard() {
         style={{
           marginTop: "2rem",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "2fr 1fr",
           gap: "1.5rem",
         }}
       >
         <Card className="glass-panel">
           <CardHeader>
-            <CardTitle>Crecimiento de Membresía</CardTitle>
+            <CardTitle>Asistencia Dominical (Últimas 8 Semanas)</CardTitle>
           </CardHeader>
           <CardContent
             style={{
-              minHeight: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              height: "300px",
+              paddingTop: "1rem"
             }}
           >
-            <p style={{ color: "var(--text-muted)" }}>
-              [Gráfico de líneas simulado]
-            </p>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={attendanceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                <XAxis dataKey="week" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', borderRadius: '8px' }}
+                  itemStyle={{ color: 'var(--accent-primary)' }}
+                />
+                <Line type="monotone" dataKey="asistencia" stroke="var(--accent-primary)" strokeWidth={3} dot={{ r: 4, fill: 'var(--accent-primary)' }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
+
         <Card className="glass-panel">
           <CardHeader>
-            <CardTitle>Asistencia por Células</CardTitle>
+            <CardTitle>Próximos Eventos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {upcomingEvents.map(event => (
+                <div key={event.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                  <div style={{ background: 'var(--accent-glow)', padding: '0.5rem', borderRadius: '8px', color: 'var(--accent-primary)' }}>
+                    <HeartPulse size={24} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{event.title}</h4>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{event.date} • {event.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Button 
+              variant="ghost" 
+              style={{ width: '100%', marginTop: '1rem', color: 'var(--accent-primary)' }}
+              onClick={() => navigate('/reuniones')}
+            >
+              Ver Calendario Completo
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div style={{ marginTop: '1.5rem' }}>
+        <Card className="glass-panel">
+          <CardHeader>
+            <CardTitle>Asistencia por Células / Ministerios</CardTitle>
           </CardHeader>
           <CardContent
             style={{
-              minHeight: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              height: "250px",
+              paddingTop: "1rem"
             }}
           >
-            <p style={{ color: "var(--text-muted)" }}>
-              [Gráfico de barras simulado]
-            </p>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={groupData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  cursor={{ fill: 'var(--bg-tertiary)' }}
+                  contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', borderRadius: '8px' }}
+                />
+                <Bar dataKey="asistencia" fill="var(--accent-secondary)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
