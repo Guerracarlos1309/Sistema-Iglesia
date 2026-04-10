@@ -6,6 +6,7 @@ const Button = forwardRef(({
   className, 
   variant = 'primary', 
   size = 'md', 
+  fullWidth = false,
   isLoading, 
   children, ...props 
 }, ref) => {
@@ -16,6 +17,7 @@ const Button = forwardRef(({
         styles.button,
         styles[variant],
         styles[size],
+        fullWidth && styles.fullWidth,
         className
       )}
       disabled={isLoading || props.disabled}

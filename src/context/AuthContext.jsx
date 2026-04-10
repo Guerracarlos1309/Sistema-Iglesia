@@ -8,24 +8,36 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // If we have a token, we might want to fetch user details or just decode it.
-    // Assuming backend returns user object during login and we store it in localStorage.
     const storedUser = localStorage.getItem('user');
-    if (storedUser && token) {
-      setUser(JSON.parse(storedUser));
+    const storedToken = localStorage.getItem('token');
+    
+    if (storedUser && storedToken) {
+      try {
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+      } catch (e) {
+        console.error('Error parsing stored user', e);
+        logout();
+      }
     }
     setLoading(false);
-  }, [token]);
+  }, []);
 
-  const login = (tokenData, userData) => {
-    localStorage.setItem('token', tokenData);
+  const login = (data) => {
+    // data should contain { token, refreshToken, _id, name, email, role }
+    const { token, refreshToken, ...userData } = data;
+    
+    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    setToken(tokenData);
+    
+    setToken(token);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);

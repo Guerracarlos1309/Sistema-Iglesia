@@ -24,6 +24,10 @@
   pointer-events: none;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 /* Variants */
 .primary {
   background-color: var(--accent-primary);

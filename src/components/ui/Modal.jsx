@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import styles from './Modal.module.css';
@@ -17,7 +18,9 @@ export function Modal({ isOpen, onClose, title, children, footer, className }) {
 
   if (!isOpen) return null;
 
-  return (
+  // Use Portal to render the modal at the end of document.body
+  // This avoids stacking context issues with parents (like transforms/animations)
+  return createPortal(
     <div className={styles.overlay} onClick={onClose}>
       <div className={cn(styles.modal, className)} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
@@ -35,6 +38,7 @@ export function Modal({ isOpen, onClose, title, children, footer, className }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

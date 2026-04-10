@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-6);
+  animation: fadeIn 0.4s ease-out;
 }
 
 .headerActions {
@@ -16,7 +17,7 @@
   display: flex;
   gap: var(--spacing-3);
   flex: 1;
-  max-width: 600px;
+  max-width: 800px;
 }
 
 .statusBadge {
@@ -30,23 +31,156 @@
 }
 
 .statusActive {
-  background-color: var(--success-bg);
-  color: var(--success);
-  border: 1px solid var(--success);
+  background-color: rgba(var(--status-success-rgb), 0.1);
+  color: var(--status-success);
+  border: 1px solid rgba(var(--status-success-rgb), 0.2);
 }
 
 .statusInactive {
-  background-color: var(--danger-bg);
-  color: var(--danger);
-  border: 1px solid var(--danger);
+  background-color: rgba(var(--status-danger-rgb), 0.1);
+  color: var(--status-danger);
+  border: 1px solid rgba(var(--status-danger-rgb), 0.2);
 }
 
-.roleBadge {
+.growthBadge {
+  background: var(--bg-hover);
   color: var(--text-secondary);
   font-size: 0.75rem;
-  background: var(--bg-tertiary);
   padding: 2px 8px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
   font-weight: 500;
+}
+
+.rowActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.deletedRow {
+  opacity: 0.7;
+  background-color: rgba(220, 38, 38, 0.03) !important;
+}
+
+.restoreBtn {
+  color: var(--accent-primary) !important;
+  font-weight: 600;
+}
+
+/* Modal Form Styles */
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputGroupTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.inputGroupThree {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selectGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.selectGroup select {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.selectGroup select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.1);
+}
+
+.sectionHeader {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.sectionHeader h4 {
+  margin-bottom: 1rem;
+  color: var(--accent-primary);
+  font-size: 1rem;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* View Mode Details */
+.viewDetails {
+  padding: 0.5rem;
+}
+
+.viewHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.avatarLarge {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
+}
+
+.viewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.viewItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+}
+
+.viewItem strong {
+  color: var(--text-muted);
+  width: 100px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

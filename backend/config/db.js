@@ -5,8 +5,15 @@ const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_NAME || 'sistema_iglesia',
-  password: process.env.DB_PASSWORD || 'password',
+  password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT || 5432,
+});
+
+console.log('DB Config Loaded:', {
+  user: pool.options.user,
+  database: pool.options.database,
+  host: pool.options.host,
+  hasPassword: !!pool.options.password
 });
 
 pool.on('error', (err) => {

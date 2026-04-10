@@ -158,13 +158,18 @@
 }
 
 .forgotPassword {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
   font-size: 0.825rem;
   color: var(--accent-primary);
   text-decoration: none;
   align-self: flex-end;
   margin-top: -var(--spacing-3);
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .forgotPassword:hover {
@@ -248,4 +253,55 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Rediseño Modal Olvidar Contraseña */
+.modalIconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-4);
+}
+
+.modalIcon {
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  padding: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+}
+
+.successState {
+  text-align: center;
+  padding: var(--spacing-4) 0;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.successIcon {
+  color: #10b981; /* Emeral-500 */
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  justify-content: center;
+}
+
+.successTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.successDescription {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-6);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

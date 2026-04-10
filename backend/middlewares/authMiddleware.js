@@ -11,19 +11,21 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-      
-      // We could optionally query the DB here to attach the full user object to the request
       req.user = decoded; 
-
-      next();
+      return next();
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      if (error.name === 'TokenExpiredError') {
+        console.error('🔴 JWT Error: Token expired at', error.expiredAt);
+        return res.status(401).json({ message: 'Token de acceso expirado', code: 'TOKEN_EXPIRED' });
+      }
+      console.error('🔴 JWT Error:', error.message);
+      return res.status(401).json({ message: 'Token de acceso inválido', code: 'INVALID_TOKEN' });
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    console.warn('⚠️ Auth Warning: No bearer token provided in headers');
+    return res.status(401).json({ message: 'No se proporcionó token de sesión', code: 'NO_TOKEN' });
   }
 };
 
